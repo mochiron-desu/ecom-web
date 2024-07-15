@@ -25,16 +25,33 @@ EcomStore is a full-stack e-commerce application built with React, Node.js, Expr
 ECOM-WEB/
 ├── backend/
 │   ├── models/
+│   │   ├── index.js
+│   │   └── product.js
 │   ├── schema/
-│   ├── server.js
-│   └── ...
+│   │   └── index.js
+│   ├── .env
+│   ├── addMoreProducts.js
+│   ├── package.json
+│   └── server.js
 ├── frontend/
+│   ├── public/
 │   ├── src/
 │   │   ├── components/
+│   │   │   ├── Cart.jsx
+│   │   │   ├── Cart.module.css
+│   │   │   ├── ProductDetails.jsx
+│   │   │   ├── ProductDetails.module.css
+│   │   │   ├── ProductList.jsx
+│   │   │   └── ProductList.module.css
 │   │   ├── contexts/
+│   │   │   └── CartContext.jsx
 │   │   ├── App.jsx
-│   │   └── ...
-│   └── ...
+│   │   ├── App.module.css
+│   │   ├── index.css
+│   │   ├── main.jsx
+│   │   └── apollo-client.js
+│   ├── package.json
+│   └── vite.config.js
 └── README.md
 ```
 
