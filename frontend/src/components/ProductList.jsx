@@ -38,15 +38,15 @@ function ProductList() {
   return (
     <div className={styles.productList}>
       <div className={styles.filters}>
-        <input 
-          type="text" 
-          placeholder="Search products..." 
+        <input
+          type="text"
+          placeholder="Search products..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className={styles.searchInput}
         />
-        <select 
-          value={category} 
+        <select
+          value={category}
           onChange={(e) => setCategory(e.target.value)}
           className={styles.categorySelect}
         >
