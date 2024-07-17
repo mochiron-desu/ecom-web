@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { Typography, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Button, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -7,6 +8,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { jsPDF } from 'jspdf';
 
 function Cart() {
+  const navigate = useNavigate();
   const { cart, removeFromCart, updateQuantity, total } = useCart();
 
   const generateInvoice = () => {
@@ -50,6 +52,7 @@ function Cart() {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>Your Cart</Typography>
+      <Button variant="contained" onClick={() => navigate('/')}>Back</Button>
       {cart.length === 0 ? (
         <Typography>Your cart is empty</Typography>
       ) : (
