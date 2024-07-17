@@ -1,6 +1,19 @@
 const { gql } = require('apollo-server-express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const typeDefs = gql`
+  type User {
+    id: ID!
+    username: String!
+    email: String!
+  }
+
+  type AuthPayload {
+    token: String!
+    user: User!
+  }
+
   type Product {
     id: ID!
     name: String!
@@ -14,10 +27,13 @@ const typeDefs = gql`
     product(id: ID!): Product
     searchProducts(query: String!): [Product]
     filterProducts(category: String, minPrice: Float, maxPrice: Float): [Product]
+    me: User
   }
 
   type Mutation {
     createProduct(name: String!, description: String, price: Float!, category: String!): Product
+    signup(username: String!, email: String!, password: String!): AuthPayload!
+    login(email: String!, password: String!): AuthPayload!
   }
 `;
 
@@ -51,9 +67,41 @@ const resolvers = {
       }
       return db.Product.findAll({ where: whereClause });
     },
+    me: (parent, args, { user, db }) => {
+      if (!user) throw new Error('Not authenticated');
+      return db.User.findByPk(user.userId);
+    },
   },
   Mutation: {
     createProduct: (parent, args, { db }) => db.Product.create(args),
+    signup: async (parent, { username, email, password }, { db }) => {
+      const existingUser = await db.User.findOne({ where: { email } });
+      if (existingUser) {
+        throw new Error('User already exists');
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await db.User.create({ username, email, password: hashedPassword });
+
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+      return { token, user };
+    },
+    login: async (parent, { email, password }, { db }) => {
+      const user = await db.User.findOne({ where: { email } });
+      if (!user) {
+        throw new Error('No user found with this email');
+      }
+
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) {
+        throw new Error('Invalid password');
+      }
+
+      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+      return { token, user };
+    },
   },
 };
 

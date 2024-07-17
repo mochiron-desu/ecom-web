@@ -6,6 +6,7 @@ import { ThemeProvider, createTheme, CssBaseline } from '@mui/material'
 import App from './App.jsx'
 import client from './apollo-client'
 import { CartProvider } from './contexts/CartContext'
+import { AuthProvider } from './contexts/AuthContext'
 
 const darkTheme = createTheme({
   palette: {
@@ -19,9 +20,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <BrowserRouter>
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
-          <CartProvider>
-            <App />
-          </CartProvider>
+          <AuthProvider>
+            <CartProvider>
+              <App />
+            </CartProvider>
+          </AuthProvider>
         </ThemeProvider>
       </BrowserRouter>
     </ApolloProvider>
